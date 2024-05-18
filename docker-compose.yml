@@ -8,6 +8,13 @@ services:
     ports: 
       - "3000:3000"
     volumes:
-      - ./app:/app
-    # entrypoint: ["/bin/bash"]
+      - ./app/public:/app/public
+      - ./app/src:/app/src
+      - ./app/.eslintrc.json:/app/.eslintrc.json
+      - ./app/jsconfig.json:/app/jsconfig.json
+      - ./app/next.config.mjs:/app/next.config.mjs
+      - ./app/package-lock.json:/app/package-lock.json
+      - ./app/package.json:/app/package.json
+      - ./app/postcss.config.mjs:/app/postcss.config.mjs
+      - ./app/tailwind.config.js:/app/tailwind.config.js
     tty: true
