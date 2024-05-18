@@ -9,4 +9,5 @@ services:
       - "3000:3000"
     volumes:
       - ./app:/app
-    entrypoint: ["npm", "run", "dev"]
+    # entrypoint: ["/bin/bash"]
+    tty: true
