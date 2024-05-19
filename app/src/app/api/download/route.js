@@ -4,9 +4,16 @@ const fs = require('fs');
 const path = require('path');
 const axios = require('axios');
 
+function encodeRFC5987ValueChars(str) {
+    return encodeURIComponent(str)
+        .replace(/['()]/g, c => '%' + c.charCodeAt(0).toString(16))
+        .replace(/\*/g, '%2A')
+        .replace(/%(?:7C|60|5E)/g, c => String.fromCharCode(parseInt(c.slice(1), 16)));
+}
+
 export async function GET(request) {
     const params = new URL(request.url).searchParams;
-    const url = params.get('url');
+    const url = params.get('url').replace("\"","");
 
     if (!ytdl.validateURL(url)) {
         return new Response('Invalid URL', { status: 400 });
@@ -16,9 +23,9 @@ export async function GET(request) {
     const title = videoInfo.videoDetails.title;
     const artist = videoInfo.videoDetails.ownerChannelName.replace("- Topic", "").trim();
     const videoId  = videoInfo.videoDetails.videoId;
-    const tempOutput = path.resolve(`/tmp/t-${title}.mp3`);
-    const finalOutput = path.resolve(`/tmp/${title}.mp3`);
-    const imagePath = path.resolve(`/tmp/${title}.jpg`);
+    const tempOutput = path.resolve(`/tmp/t-${videoId}.mp3`);
+    const finalOutput = path.resolve(`/tmp/${videoId}.mp3`);
+    const imagePath = path.resolve(`/tmp/${videoId}.jpg`);
     const audioStream = ytdl(url, {
         filter: 'audioonly',
         quality: 'highestaudio'
@@ -36,7 +43,7 @@ export async function GET(request) {
     }
 
     return new Promise((resolve, reject) => {
-        const convertWAV = `ffmpeg -i pipe:0 -c:a libmp3lame -q:a 0 -metadata artist="${artist}" -y "${tempOutput}"`;
+        const convertWAV = `ffmpeg -i pipe:0 -c:a libmp3lame -q:a 0 -metadata artist="${artist}" -metadata title="${title}" -y "${tempOutput}"`;
         const ffmpegProcess = exec(convertWAV, (err, stdout, stderr) => {
             if (err) {
                 console.error('Error during conversion:', err);
@@ -65,7 +72,8 @@ export async function GET(request) {
 
             const headers = new Headers();
             headers.append('Content-Type', 'audio/mp3');
-            headers.append('Content-Disposition', `attachment; filename="${videoId}.mp3"`);
+            const encodedTitle = encodeRFC5987ValueChars(title);
+            headers.append('Content-Disposition', `attachment; filename*=UTF-8''${encodedTitle}.mp3`);
 
             resolve(new Response(fileStreamSong, { headers }));
         });
