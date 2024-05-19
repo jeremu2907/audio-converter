@@ -17,4 +17,5 @@ services:
       - ./app/package.json:/app/package.json
       - ./app/postcss.config.mjs:/app/postcss.config.mjs
       - ./app/tailwind.config.js:/app/tailwind.config.js
+      - ./app/tmp:/tmp
     tty: true

@@ -1,51 +1,8 @@
-// const ytdl = require('ytdl-core');
-// const ffmpeg = require('fluent-ffmpeg');
-// const fs = require('fs');
-// const path = require('path');
-
-// export async function GET(request) {
-//     const params = request.nextUrl.searchParams;
-//     const url = params.get('url');
-//     const videoId = ytdl.getURLVideoID(url);
-//     const output = path.resolve(`/tmp/${videoId}.flac`);
-
-//     return new Promise((resolve, reject) => {
-//         ytdl(url, {
-//             filter: 'audioonly',
-//             quality: 'highestaudio'
-//         }).pipe(
-//             ffmpeg()
-//                 .audioCodec('flac')
-//                 .toFormat('flac')
-//                 .on('end', () => {
-//                     const fileStream = fs.createReadStream(output);
-//                     fileStream.on('end', () => {
-//                         fs.unlink(output, (err) => {
-//                             if (err) {
-//                                 console.error('Error deleting file:', err);
-//                             }
-//                         });
-//                     });
-
-//                     const headers = new Headers();
-//                     headers.append('Content-Type', 'audio/flac');
-//                     headers.append('Content-Disposition', `attachment; filename="${videoId}.flac"`);
-
-//                     resolve(new Response(fileStream, { headers }));
-//                 })
-//                 .on('error', (err) => {
-//                     console.error('Error during conversion:', err);
-//                     reject(new Response('Internal Server Error', { status: 500 }));
-//                 })
-//                 .save(output)
-//         )
-//     });
-// }
-
 const ytdl = require('ytdl-core');
 const { exec } = require('child_process');
 const fs = require('fs');
 const path = require('path');
+const axios = require('axios');
 
 export async function GET(request) {
     const params = new URL(request.url).searchParams;
@@ -55,25 +12,51 @@ export async function GET(request) {
         return new Response('Invalid URL', { status: 400 });
     }
 
-    const videoId = ytdl.getURLVideoID(url);
-    const output = path.resolve(`/tmp/${videoId}.flac`);
+    const videoInfo = await ytdl.getBasicInfo(url);
+    const title = videoInfo.videoDetails.title;
+    const artist = videoInfo.videoDetails.ownerChannelName.replace("- Topic", "").trim();
+    const videoId  = videoInfo.videoDetails.videoId;
+    const tempOutput = path.resolve(`/tmp/t-${title}.mp3`);
+    const finalOutput = path.resolve(`/tmp/${title}.mp3`);
+    const imagePath = path.resolve(`/tmp/${title}.jpg`);
     const audioStream = ytdl(url, {
         filter: 'audioonly',
         quality: 'highestaudio'
     });
-    const thumbnailURL = `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`
+
+    const thumbnailURL = `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`;
+
+    let setThumbnail = true;
+    try {
+        const response = await axios.get(thumbnailURL, { responseType: 'arraybuffer' });
+        fs.writeFileSync(imagePath, Buffer.from(response.data, 'binary')); // Save the image file
+    } catch (err){
+        console.log(err)
+        setThumbnail = false;
+    }
 
     return new Promise((resolve, reject) => {
-        const ffmpegProcess = exec(`ffmpeg -i pipe:0 -c:a flac -y ${output}`, (err, stdout, stderr) => {
+        const convertWAV = `ffmpeg -i pipe:0 -c:a libmp3lame -q:a 0 -metadata artist="${artist}" -y "${tempOutput}"`;
+        const ffmpegProcess = exec(convertWAV, (err, stdout, stderr) => {
             if (err) {
                 console.error('Error during conversion:', err);
                 reject(new Response('Internal Server Error', { status: 500 }));
                 return;
             }
 
-            const fileStream = fs.createReadStream(output);
-            fileStream.on('end', () => {
-                fs.unlink(output, (err) => {
+            if (setThumbnail) {
+                const addThumbnail = `ffmpeg -i "${tempOutput}" -i "${imagePath}" -map 0:0 -map 1:0 -c copy -id3v2_version 3 -metadata:s:v title="Album cover" -metadata:s:v comment="Cover (front)" -y "${finalOutput}"`
+                exec(addThumbnail, (err, stdout, stderr) => {
+                    if (err) {
+                        console.error('Error during thumnail:', err);
+                        return;
+                    }
+                });
+            }
+
+            const fileStreamSong = fs.createReadStream(finalOutput);
+            fileStreamSong.on('end', () => {
+                fs.unlink(finalOutput, (err) => {
                     if (err) {
                         console.error('Error deleting file:', err);
                     }
@@ -81,10 +64,10 @@ export async function GET(request) {
             });
 
             const headers = new Headers();
-            headers.append('Content-Type', 'audio/flac');
-            headers.append('Content-Disposition', `attachment; filename="${videoId}.flac"`);
+            headers.append('Content-Type', 'audio/mp3');
+            headers.append('Content-Disposition', `attachment; filename="${videoId}.mp3"`);
 
-            resolve(new Response(fileStream, { headers }));
+            resolve(new Response(fileStreamSong, { headers }));
         });
 
         audioStream.pipe(ffmpegProcess.stdin);
