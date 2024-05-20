@@ -114,7 +114,7 @@ export default function Mp3Converter() {
                         onClick={download}
                         role='button'
                     >
-                        <p className="m-0">{loading ? '...loading' : 'download'}</p>
+                        <p className="m-0">{loading ? '... loading' : 'download'}</p>
                     </button>
                 </div>
             </div>}

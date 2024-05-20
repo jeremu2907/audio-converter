@@ -21,12 +21,7 @@ export default function Mode() {
                 <button role='button'
                     className='border-b border-gray-200 py-2 mb-5'
                 >
-                    upcoming...
-                </button>
-                <button role='button'
-                    className='border-b border-gray-200 py-2 mb-5'
-                >
-                    upcoming...
+                    more features coming soon ...
                 </button>
             </div>
             {(mode === 0) && <Mp3Converter />}
