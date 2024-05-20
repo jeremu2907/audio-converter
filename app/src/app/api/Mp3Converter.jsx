@@ -82,7 +82,7 @@ export default function Mp3Converter() {
                     <input
                         className="appearance-none bg-transparent border-none w-full text-white-100 mr-3 py-1 px-2 leading-tight focus:outline-none"
                         type="text"
-                        placeholder="Paste your YouTube URL here"
+                        placeholder="Paste your Youtube URL here"
                         aria-label="URL"
                         onChange={handleInputChange}
                         value={yturl}
