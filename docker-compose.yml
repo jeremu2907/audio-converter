@@ -2,6 +2,7 @@ version: '3.6'
 
 services:
   app:
+    image: ghcr.io/jeremu2907/audio-converter:main
     build:
       context: .
       dockerfile: dev.dockerfile
