@@ -17,7 +17,7 @@ function encodeRFC5987ValueChars(str) {
 export async function GET(request) {
     exec("rm -rf /tmp/t-*.mp3 /tmp/*.jpg");
     if (cacheSize > CACHE_CAPACITY) {
-        exec("ls -lt | tail -n +6 | xargs rm -f --");
+        exec("ls -lt /tmp | tail -n +6 | xargs rm -f --");
         cacheSize = cacheSize - 5;
     }
 
@@ -36,54 +36,43 @@ export async function GET(request) {
     const finalOutput = path.resolve(`/tmp/${videoId}.mp3`);
     const imagePath = path.resolve(`/tmp/${videoId}.jpg`);
 
-    fs.access(finalOutput, fs.constants.F_OK, async (err) => {
-        if (err) {
-            console.log("not in cache");
-            cacheSize++;
+    if (!fs.existsSync(finalOutput)) {
+        console.log("not in cache");
+        cacheSize++;
 
-            const audioStream = ytdl(url, {
-                filter: 'audioonly',
-                quality: 'highestaudio'
-            });
-        
-            const thumbnailURL = `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`;
-        
-            let setThumbnail = true;
-            try {
-                const response = await axios.get(thumbnailURL, { responseType: 'arraybuffer' });
-                fs.writeFileSync(imagePath, Buffer.from(response.data, 'binary')); // Save the image file
-            } catch (err) {
-                console.log(err)
-                setThumbnail = false;
-            }
+        const audioStream = ytdl(url, {
+            filter: 'audioonly',
+            quality: 'highestaudio'
+        });
+    
+        const thumbnailURL = `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`;
+    
+        let setThumbnail = true;
+        try {
+            const response = await axios.get(thumbnailURL, { responseType: 'arraybuffer' });
+            fs.writeFileSync(imagePath, Buffer.from(response.data, 'binary')); // Save the image file
+        } catch (err) {
+            console.log(err)
+            setThumbnail = false;
+        }
 
-            return new Promise((resolve, reject) => {
-                const convertWAV = `ffmpeg -i pipe:0 -c:a libmp3lame -q:a 0 -metadata artist="${artist}" -metadata title="${title}" -y "${setThumbnail ? tempOutput : finalOutput}"`;
-                const ffmpegProcess = exec(convertWAV, async (err, stdout, stderr) => {
-                    if (err) {
-                        console.error('Error during conversion:', err);
-                        reject(new Response('Internal Server Error', { status: 500 }));
-                        return;
-                    }
+        return new Promise((resolve, reject) => {
+            const convertWAV = `ffmpeg -i pipe:0 -c:a libmp3lame -q:a 0 -metadata artist="${artist}" -metadata title="${title}" -y "${setThumbnail ? tempOutput : finalOutput}"`;
+            const ffmpegProcess = exec(convertWAV, async (err, stdout, stderr) => {
+                if (err) {
+                    console.error('Error during conversion:', err);
+                    reject(new Response('Internal Server Error', { status: 500 }));
+                    return;
+                }
 
-                    if (setThumbnail) {
-                        const addThumbnail = `ffmpeg -i "${tempOutput}" -i "${imagePath}" -map 0:0 -map 1:0 -c copy -id3v2_version 3 -metadata:s:v title="Album cover" -metadata:s:v comment="Cover (front)" -y "${finalOutput}"`
-                        exec(addThumbnail, (err, stdout, stderr) => {
-                            if (err) {
-                                console.error('Error during thumnail:', err);
-                                return;
-                            }
+                if (setThumbnail) {
+                    const addThumbnail = `ffmpeg -i "${tempOutput}" -i "${imagePath}" -map 0:0 -map 1:0 -c copy -id3v2_version 3 -metadata:s:v title="Album cover" -metadata:s:v comment="Cover (front)" -y "${finalOutput}"`
+                    exec(addThumbnail, (err, stdout, stderr) => {
+                        if (err) {
+                            console.error('Error during thumnail:', err);
+                            return;
+                        }
 
-                            const fileStreamSong = fs.createReadStream(finalOutput);
-
-                            const headers = new Headers();
-                            headers.append('Content-Type', 'audio/mp3');
-                            const encodedTitle = encodeRFC5987ValueChars(title);
-                            headers.append('Content-Disposition', `attachment; filename*=UTF-8''${encodedTitle}.mp3`);
-
-                            resolve(new Response(fileStreamSong, { headers }));
-                        });
-                    } else {
                         const fileStreamSong = fs.createReadStream(finalOutput);
 
                         const headers = new Headers();
@@ -92,23 +81,30 @@ export async function GET(request) {
                         headers.append('Content-Disposition', `attachment; filename*=UTF-8''${encodedTitle}.mp3`);
 
                         resolve(new Response(fileStreamSong, { headers }));
-                    }
-                });
+                    });
+                } else {
+                    const fileStreamSong = fs.createReadStream(finalOutput);
 
-                audioStream.pipe(ffmpegProcess.stdin);
+                    const headers = new Headers();
+                    headers.append('Content-Type', 'audio/mp3');
+                    const encodedTitle = encodeRFC5987ValueChars(title);
+                    headers.append('Content-Disposition', `attachment; filename*=UTF-8''${encodedTitle}.mp3`);
+
+                    resolve(new Response(fileStreamSong, { headers }));
+                }
             });
-        } else {
-            console.log("found in cache");
-            const fileStreamSong = fs.createReadStream(finalOutput);
 
-            const headers = new Headers();
-            headers.append('Content-Type', 'audio/mp3');
-            const encodedTitle = encodeRFC5987ValueChars(title);
-            headers.append('Content-Disposition', `attachment; filename*=UTF-8''${encodedTitle}.mp3`);
+            audioStream.pipe(ffmpegProcess.stdin);
+        });
+    } else {
+        console.log("found in cache");
+        const fileStreamSong = fs.createReadStream(finalOutput);
 
-            return new Response(fileStreamSong, { headers });
-        }
-    });
+        const headers = new Headers();
+        headers.append('Content-Type', 'audio/mp3');
+        const encodedTitle = encodeRFC5987ValueChars(title);
+        headers.append('Content-Disposition', `attachment; filename*=UTF-8''${encodedTitle}.mp3`);
 
-    return new Response();
+        return new Response(fileStreamSong, { headers });
+    }
 }

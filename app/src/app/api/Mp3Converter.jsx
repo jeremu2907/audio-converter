@@ -41,24 +41,21 @@ export default function Mp3Converter() {
                 responseType: 'blob',
             });
 
-            // Create a Blob object from the response
-            const blob = new Blob([response.data]);
+            // Create a blob URL for the downloaded file
+            const blobUrl = URL.createObjectURL(response.data);
 
-            // Create a temporary link element
+            // Create a link element
             const link = document.createElement('a');
-            link.href = window.URL.createObjectURL(blob);
-            // Extract filename from Content-Disposition header
+            link.href = blobUrl;
             const contentDisposition = response.headers['content-disposition'];
-            let fileName = `${videoData.title}.mp3`; // Default filename if Content-Disposition header is missing or not well-formed
+            link.download = `${videoData.title}.mp3`; // Default filename if Content-Disposition header is missing or not well-formed
 
             if (contentDisposition) {
                 const matches = contentDisposition.match(/filename\*=UTF-8''([\w%]+\.mp3)/i);
                 if (matches && matches.length > 1) {
-                    fileName = decodeURIComponent(matches[1]);
+                    link.download = decodeURIComponent(matches[1]);
                 }
             }
-
-            link.download = fileName;
 
             // Append the link to the body
             document.body.appendChild(link);
