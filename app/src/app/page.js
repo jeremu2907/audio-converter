@@ -9,7 +9,7 @@ export default function Home() {
             <Mode />
             <div className='flex items-center mt-[100px] mb-[50px] gap-[30px] text-gray-500'>
                 <p>
-                    I don't like ads, and I believe you don't either.<br/>
+                    I don&apos;t like ads, and I believe you don&apos;t either.<br/>
                     It would mean a lot if you could support me on Ko-fi.
                 </p>
                 <a href='https://ko-fi.com/D1D0YBLRS' target='_blank'>
