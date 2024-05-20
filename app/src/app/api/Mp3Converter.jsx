@@ -86,7 +86,7 @@ export default function Mp3Converter() {
                         onClick={getInfo}
                         role='button'
                     >
-                        Convert
+                        Search
                     </button>
                 </div>
             </form>
@@ -97,7 +97,7 @@ export default function Mp3Converter() {
                         width={videoData.embedObj.width * 0.5}
                         height={videoData.embedObj.height * 0.5}
                     />
-                    <div className='flex justify-between align-center mt-10 gap-3'>
+                    <div className='flex justify-between align-center mt-10 gap-3 w-full'>
                         <div>
                             <h2 className='text-2xl font-semibold m-0 max-w-[400px]'>
                                 {videoData.title}
@@ -105,7 +105,7 @@ export default function Mp3Converter() {
                             <p>{videoData.artist}</p>
                         </div>
                         <button
-                            className='bg-blue-100 text-white-100 px-5 py-0.5 rounded-md hover:bg-blue-50 max-h-[40px] transition-all'
+                            className='bg-blue-100 text-white-100 px-5 py-0.5 rounded hover:bg-blue-50 max-h-[40px] transition-all'
                             onClick={download}
                             role='button'
                         >

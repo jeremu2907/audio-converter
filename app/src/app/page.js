@@ -6,8 +6,11 @@ import Mode from './api/Mode';
 
 export default function Home() {
     return (
+        <>
+        <div className='sticky top-[-100%] left-0 py-2 px-10 bg-teal-200 w-full'>
+            <h1 className='font-light font-encodeSans text-[30px] cursor-default'>TAudio.</h1>
+        </div>
         <main className="flex min-h-screen flex-col items-center justify-center p-20">
-            <h1 className='fixed top-5 left-10 font-light font-encodeSans text-[30px] cursor-default'>TAudio.</h1>
             <Mode />
             <div className='flex items-center mt-[100px] mb-[50px] gap-[30px] text-gray-500'>
                 <p>
@@ -39,5 +42,6 @@ export default function Home() {
                 theme="dark"
             />
         </main>
+        </>
     );
 }
