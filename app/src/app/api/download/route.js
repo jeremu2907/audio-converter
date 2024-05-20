@@ -15,14 +15,14 @@ function encodeRFC5987ValueChars(str) {
 }
 
 export async function GET(request) {
-    exec("rm -rf /tmp/t-*.mp3 /tmp/*.jpg");
+    exec('rm -rf /tmp/t-*.mp3 /tmp/*.jpg');
     if (cacheSize > CACHE_CAPACITY) {
-        exec("ls -lt /tmp | tail -n +6 | xargs rm -f --");
+        exec('ls -lt /tmp | tail -n +6 | xargs rm -f --');
         cacheSize = cacheSize - 5;
     }
 
     const params = new URL(request.url).searchParams;
-    const url = params.get('url').replace("\"", "");
+    const url = params.get('url').replace('"', '');
 
     if (!ytdl.validateURL(url)) {
         return new Response('Invalid URL', { status: 400 });
@@ -30,29 +30,29 @@ export async function GET(request) {
 
     const videoInfo = await ytdl.getBasicInfo(url);
     const title = videoInfo.videoDetails.title;
-    const artist = videoInfo.videoDetails.ownerChannelName.replace("- Topic", "").trim();
+    const artist = videoInfo.videoDetails.ownerChannelName.replace('- Topic', '').trim();
     const videoId = videoInfo.videoDetails.videoId;
     const tempOutput = path.resolve(`/tmp/t-${videoId}.mp3`);
     const finalOutput = path.resolve(`/tmp/${videoId}.mp3`);
     const imagePath = path.resolve(`/tmp/${videoId}.jpg`);
 
     if (!fs.existsSync(finalOutput)) {
-        console.log("not in cache");
+        console.log('not in cache');
         cacheSize++;
 
         const audioStream = ytdl(url, {
             filter: 'audioonly',
-            quality: 'highestaudio'
+            quality: 'highestaudio',
         });
-    
+
         const thumbnailURL = `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`;
-    
+
         let setThumbnail = true;
         try {
             const response = await axios.get(thumbnailURL, { responseType: 'arraybuffer' });
-            fs.writeFileSync(imagePath, Buffer.from(response.data, 'binary')); // Save the image file
+            fs.writeFileSync(imagePath, Buffer.from(response.data, 'binary'));
         } catch (err) {
-            console.log(err)
+            console.log(err);
             setThumbnail = false;
         }
 
@@ -66,8 +66,8 @@ export async function GET(request) {
                 }
 
                 if (setThumbnail) {
-                    const addThumbnail = `ffmpeg -i "${tempOutput}" -i "${imagePath}" -map 0:0 -map 1:0 -c copy -id3v2_version 3 -metadata:s:v title="Album cover" -metadata:s:v comment="Cover (front)" -y "${finalOutput}"`
-                    exec(addThumbnail, (err, stdout, stderr) => {
+                    const addThumbnail = `ffmpeg -i "${tempOutput}" -i "${imagePath}" -map 0:0 -map 1:0 -c copy -id3v2_version 3 -metadata:s:v title="Album cover" -metadata:s:v comment="Cover (front)" -y "${finalOutput}"`;
+                    exec(addThumbnail, (err, stdout_, stderr_) => {
                         if (err) {
                             console.error('Error during thumnail:', err);
                             return;
@@ -97,7 +97,7 @@ export async function GET(request) {
             audioStream.pipe(ffmpegProcess.stdin);
         });
     } else {
-        console.log("found in cache");
+        console.log('found in cache');
         const fileStreamSong = fs.createReadStream(finalOutput);
 
         const headers = new Headers();

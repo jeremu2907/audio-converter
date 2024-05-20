@@ -1,8 +1,8 @@
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import "./globals.css";
+import './globals.css';
 
-import Mode from "./api/Mode";
+import Mode from './api/Mode';
 
 export default function Home() {
     return (
@@ -15,7 +15,7 @@ export default function Home() {
                     It would mean a lot if you could support me on Ko-fi.
                 </p>
                 <a href='https://ko-fi.com/D1D0YBLRS' target='_blank'>
-                    <img height='36' style={{border:'0px', height:'36px'}} src='https://storage.ko-fi.com/cdn/kofi2.png?v=3' border='0' alt='Support me on Ko-fi' />
+                    <img height='36' style={{ border:'0px', height:'36px' }} src='https://storage.ko-fi.com/cdn/kofi2.png?v=3' border='0' alt='Support me on Ko-fi' />
                 </a>
             </div>
             <p>

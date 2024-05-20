@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useState } from 'react';
 import axios from 'axios';
-import {toast} from 'react-toastify';
+import { toast } from 'react-toastify';
 
 export default function Mp3Converter() {
     const [yturl, setYturl] = useState('');
@@ -10,30 +10,30 @@ export default function Mp3Converter() {
     const handleInputChange = e => {
         setYturl(e.target.value);
         setVideoData(null);
-    }
+    };
 
     const getInfo = async (e) => {
         e.stopPropagation();
         e.preventDefault();
 
         try {
-            if (yturl.trim() === "") {
-                toast.info("You gotta paste valid Youtube URL");
+            if (yturl.trim() === '') {
+                toast.info('You gotta paste valid Youtube URL');
                 return;
             }
             const response = await axios.get(`/api/info?url=${yturl}`);
             setVideoData(response.data);
         } catch (err) {
             console.error(err);
-            toast.error("Can't find your video");
+            toast.error('Can\'t find your video');
         }
     };
 
     const download = async () => {
         setLoading(true);
         try {
-            if (yturl.trim() === "") {
-                toast.info("You gotta paste valid Youtube URL");
+            if (yturl.trim() === '') {
+                toast.info('You gotta paste valid Youtube URL');
                 setLoading(false);
                 return;
             }
@@ -48,7 +48,7 @@ export default function Mp3Converter() {
             const link = document.createElement('a');
             link.href = blobUrl;
             const contentDisposition = response.headers['content-disposition'];
-            link.download = `${videoData.title}.mp3`; // Default filename if Content-Disposition header is missing or not well-formed
+            link.download = `${videoData.title}.mp3`;
 
             if (contentDisposition) {
                 const matches = contentDisposition.match(/filename\*=UTF-8''([\w%]+\.mp3)/i);
@@ -59,34 +59,30 @@ export default function Mp3Converter() {
 
             // Append the link to the body
             document.body.appendChild(link);
-
-            // Trigger the download
             link.click();
-
-            // Clean up
             document.body.removeChild(link);
         } catch (err) {
             console.error(err);
-            toast.error("Can't download your .mp3 file");
+            toast.error('Can\'t download your .mp3 file');
         }
         setLoading(false);
     };
 
-    return(
+    return (
         <>
-            <form className="w-1/2 min-w-[600px]">
-                <div className="flex items-center border-b border-teal-200 py-2 w-full">
+            <form className='w-1/2 min-w-[600px]'>
+                <div className='flex items-center border-b border-teal-200 py-2 w-full'>
                     <input
-                        className="appearance-none bg-transparent border-none w-full text-white-100 mr-3 py-1 px-2 leading-tight focus:outline-none"
-                        type="text"
-                        placeholder="Paste your Youtube URL here"
-                        aria-label="URL"
+                        className='appearance-none bg-transparent border-none w-full text-white-100 mr-3 py-1 px-2 leading-tight focus:outline-none'
+                        type='text'
+                        placeholder='Paste your Youtube URL here'
+                        aria-label='URL'
                         onChange={handleInputChange}
                         value={yturl}
                     />
                     <button
-                        className="flex-shrink-0 bg-transparent hover:bg-teal-200 border-0 text-m text-Tblue-50 px-5 py-2 rounded transition-all"
-                        type="button"
+                        className='flex-shrink-0 bg-transparent hover:bg-teal-200 border-0 text-m text-Tblue-50 px-5 py-2 rounded transition-all'
+                        type='button'
                         onClick={getInfo}
                         role='button'
                     >
@@ -94,14 +90,14 @@ export default function Mp3Converter() {
                     </button>
                 </div>
             </form>
-            {(videoData && videoData.embedObj) && 
-                <div className="flex flex-col items-center">
+            {(videoData && videoData.embedObj) &&
+                <div className='flex flex-col items-center'>
                     <iframe
                         src={videoData.embedObj.iframeUrl}
                         width={videoData.embedObj.width * 0.5}
                         height={videoData.embedObj.height * 0.5}
                     />
-                    <div className="flex justify-between align-center mt-10 gap-3">
+                    <div className='flex justify-between align-center mt-10 gap-3'>
                         <div>
                             <h2 className='text-2xl font-semibold m-0 max-w-[400px]'>
                                 {videoData.title}
@@ -113,7 +109,7 @@ export default function Mp3Converter() {
                             onClick={download}
                             role='button'
                         >
-                            <p className="m-0">{loading ? '... loading' : 'download'}</p>
+                            <p className='m-0'>{loading ? '... loading' : 'download'}</p>
                         </button>
                     </div>
                 </div>
