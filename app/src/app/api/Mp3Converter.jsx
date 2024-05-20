@@ -49,7 +49,7 @@ export default function Mp3Converter() {
             link.href = window.URL.createObjectURL(blob);
             // Extract filename from Content-Disposition header
             const contentDisposition = response.headers['content-disposition'];
-            let fileName = 'downloaded-file.mp3'; // Default filename if Content-Disposition header is missing or not well-formed
+            let fileName = `${videoData.title}.mp3`; // Default filename if Content-Disposition header is missing or not well-formed
 
             if (contentDisposition) {
                 const matches = contentDisposition.match(/filename\*=UTF-8''([\w%]+\.mp3)/i);
@@ -77,10 +77,10 @@ export default function Mp3Converter() {
 
     return(
         <>
-            <form class="w-1/2 min-w-[600px]">
-                <div class="flex items-center border-b border-teal-200 py-2 w-full">
+            <form className="w-1/2 min-w-[600px]">
+                <div className="flex items-center border-b border-teal-200 py-2 w-full">
                     <input
-                        class="appearance-none bg-transparent border-none w-full text-white-100 mr-3 py-1 px-2 leading-tight focus:outline-none"
+                        className="appearance-none bg-transparent border-none w-full text-white-100 mr-3 py-1 px-2 leading-tight focus:outline-none"
                         type="text"
                         placeholder="Paste your YouTube URL here"
                         aria-label="URL"
@@ -88,7 +88,7 @@ export default function Mp3Converter() {
                         value={yturl}
                     />
                     <button
-                        class="flex-shrink-0 bg-transparent hover:bg-teal-200 border-0 text-m text-Tblue-50 px-5 py-2 rounded" type="button"
+                        className="flex-shrink-0 bg-transparent hover:bg-teal-200 border-0 text-m text-Tblue-50 px-5 py-2 rounded" type="button"
                         onClick={getInfo}
                         role='button'
                     >
