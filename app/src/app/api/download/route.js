@@ -4,8 +4,8 @@ const fs = require('fs');
 const path = require('path');
 const axios = require('axios');
 
-let cacheSize = 3;
-const CACHE_CAPACITY = 3;
+let cacheSize = 0;
+const CACHE_CAPACITY = 100;
 
 function encodeRFC5987ValueChars(str) {
     return encodeURIComponent(str)
@@ -16,7 +16,6 @@ function encodeRFC5987ValueChars(str) {
 
 export async function GET(request) {
     exec("rm -rf /tmp/t-*.mp3 /tmp/*.jpg");
-    console.log(cacheSize);
     if (cacheSize > CACHE_CAPACITY) {
         exec("ls -lt | tail -n +6 | xargs rm -f --");
         cacheSize = cacheSize - 5;
