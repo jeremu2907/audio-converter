@@ -73,7 +73,7 @@ export default function Mp3Converter() {
             <form className='w-1/2 min-w-[600px]'>
                 <div className='flex items-center border-b border-teal-200 py-2 w-full'>
                     <input
-                        className='appearance-none bg-transparent border-none w-full text-white-100 mr-3 py-1 px-2 leading-tight focus:outline-none'
+                        className='appearance-none bg-transparent border-none w-full text-white-100 mr-3 py-1 px-2 leading-tight focus:outline-none cursor-text'
                         type='text'
                         placeholder='Paste your Youtube URL here'
                         aria-label='URL'
