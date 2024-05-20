@@ -14,12 +14,12 @@ export default function Mode() {
         <>
             <div className='w-max flex justify-evenly gap-10 border-b-2 border-gray-100 mb-10'>
                 <button role='button' onClick={() => handleClick(0)}
-                    className={`border-b border-gray-200 py-2 mb-5 ${mode === 0 && 'bg-blue-100'} rounded-md p-5`}
+                    className={`border-b border-gray-200 py-2 mb-5 ${mode === 0 && 'bg-blue-100'} rounded-md p-5 transition-all`}
                 >
                     .mp3 conversion
                 </button>
                 <button role='button'
-                    className='border-b border-gray-200 py-2 mb-5'
+                    className='border-b border-gray-200 py-2 mb-5 transition-all'
                 >
                     more features coming soon ...
                 </button>

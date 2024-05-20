@@ -85,7 +85,8 @@ export default function Mp3Converter() {
                         value={yturl}
                     />
                     <button
-                        className="flex-shrink-0 bg-transparent hover:bg-teal-200 border-0 text-m text-Tblue-50 px-5 py-2 rounded" type="button"
+                        className="flex-shrink-0 bg-transparent hover:bg-teal-200 border-0 text-m text-Tblue-50 px-5 py-2 rounded transition-all"
+                        type="button"
                         onClick={getInfo}
                         role='button'
                     >
@@ -93,28 +94,30 @@ export default function Mp3Converter() {
                     </button>
                 </div>
             </form>
-            {(videoData && videoData.embedObj) && <div>
-                <iframe
-                    src={videoData.embedObj.iframeUrl}
-                    width={videoData.embedObj.width * 0.5}
-                    height={videoData.embedObj.height * 0.5}
-                />
-                <div className="flex justify-between align-center mt-10">
-                    <div>
-                        <h2 className='text-2xl font-semibold m-0 max-w-[30ch]'>
-                            {videoData.title}
-                        </h2>
-                        <p>{videoData.artist}</p>
+            {(videoData && videoData.embedObj) && 
+                <div className="flex flex-col items-center">
+                    <iframe
+                        src={videoData.embedObj.iframeUrl}
+                        width={videoData.embedObj.width * 0.5}
+                        height={videoData.embedObj.height * 0.5}
+                    />
+                    <div className="flex justify-between align-center mt-10 gap-3">
+                        <div>
+                            <h2 className='text-2xl font-semibold m-0 max-w-[400px]'>
+                                {videoData.title}
+                            </h2>
+                            <p>{videoData.artist}</p>
+                        </div>
+                        <button
+                            className='bg-blue-100 text-white-100 px-5 py-0.5 rounded-md hover:bg-blue-50 max-h-[40px] transition-all'
+                            onClick={download}
+                            role='button'
+                        >
+                            <p className="m-0">{loading ? '... loading' : 'download'}</p>
+                        </button>
                     </div>
-                    <button
-                        className='bg-blue-100 text-white-100 px-5 py-0.5 rounded-md hover:bg-blue-50 max-h-[40px]'
-                        onClick={download}
-                        role='button'
-                    >
-                        <p className="m-0">{loading ? '... loading' : 'download'}</p>
-                    </button>
                 </div>
-            </div>}
+            }
         </>
     );
 }
