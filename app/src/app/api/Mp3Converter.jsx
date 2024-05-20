@@ -37,8 +37,7 @@ export default function Mp3Converter() {
                 setLoading(false);
                 return;
             }
-            const response = await axios.get(`/api/download?url=${yturl}`);
-            setVideoData(response.data);
+            await axios.get(`/api/download?url=${yturl}`);
         } catch (err) {
             console.error(err);
             toast.error("Can't download your .mp3 file");

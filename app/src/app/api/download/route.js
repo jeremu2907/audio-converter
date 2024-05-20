@@ -42,8 +42,8 @@ export async function GET(request) {
         setThumbnail = false;
     }
 
-    return new Promise((resolve, reject) => {
-        const convertWAV = `ffmpeg -i pipe:0 -c:a libmp3lame -q:a 0 -metadata artist="${artist}" -metadata title="${title}" -y "${tempOutput}"`;
+    return new Promise(async (resolve, reject) => {
+        const convertWAV = `ffmpeg -i pipe:0 -c:a libmp3lame -q:a 0 -metadata artist="${artist}" -metadata title="${title}" -y "${setThumbnail?tempOutput:finalOutput}"`;
         const ffmpegProcess = exec(convertWAV, (err, stdout, stderr) => {
             if (err) {
                 console.error('Error during conversion:', err);
@@ -62,13 +62,6 @@ export async function GET(request) {
             }
 
             const fileStreamSong = fs.createReadStream(finalOutput);
-            fileStreamSong.on('end', () => {
-                fs.unlink(finalOutput, (err) => {
-                    if (err) {
-                        console.error('Error deleting file:', err);
-                    }
-                });
-            });
 
             const headers = new Headers();
             headers.append('Content-Type', 'audio/mp3');
@@ -78,6 +71,20 @@ export async function GET(request) {
             resolve(new Response(fileStreamSong, { headers }));
         });
 
-        audioStream.pipe(ffmpegProcess.stdin);
+        fs.access(finalOutput, fs.constants.F_OK, (err) => {
+            if (err) {
+                audioStream.pipe(ffmpegProcess.stdin);
+            } else {
+                console.log("found in cache");
+                const fileStreamSong = fs.createReadStream(finalOutput);
+
+                const headers = new Headers();
+                headers.append('Content-Type', 'audio/mp3');
+                const encodedTitle = encodeRFC5987ValueChars(title);
+                headers.append('Content-Disposition', `attachment; filename*=UTF-8''${encodedTitle}.mp3`);
+
+                resolve(new Response(fileStreamSong, { headers }));
+            }
+        });
     });
 }
