@@ -30,3 +30,26 @@ body {
         text-wrap: balance;
     }
 }
+
+/* For webkit-based browsers like Chrome, Safari, and newer versions of Edge */
+/* Adjust the scrollbar width, height, and color as needed */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 12px;
+}
+
+/* Track (the area behind the scrollbar) */
+::-webkit-scrollbar-track {
+    background-color: transparent;
+}
+
+/* Handle (the draggable part of the scrollbar) */
+::-webkit-scrollbar-thumb {
+    background-color: #39474b;
+    border-radius: 6px;
+}
+
+/* Optional: hover effect on the scrollbar handle */
+::-webkit-scrollbar-thumb:hover {
+    background-color: #2d474e;
+}
