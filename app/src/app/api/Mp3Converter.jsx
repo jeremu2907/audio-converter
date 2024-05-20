@@ -37,7 +37,37 @@ export default function Mp3Converter() {
                 setLoading(false);
                 return;
             }
-            await axios.get(`/api/download?url=${yturl}`);
+            const response = await axios.get(`/api/download?url=${yturl}`, {
+                responseType: 'blob',
+            });
+
+            // Create a Blob object from the response
+            const blob = new Blob([response.data]);
+
+            // Create a temporary link element
+            const link = document.createElement('a');
+            link.href = window.URL.createObjectURL(blob);
+            // Extract filename from Content-Disposition header
+            const contentDisposition = response.headers['content-disposition'];
+            let fileName = 'downloaded-file.mp3'; // Default filename if Content-Disposition header is missing or not well-formed
+
+            if (contentDisposition) {
+                const matches = contentDisposition.match(/filename\*=UTF-8''([\w%]+\.mp3)/i);
+                if (matches && matches.length > 1) {
+                    fileName = decodeURIComponent(matches[1]);
+                }
+            }
+
+            link.download = fileName;
+
+            // Append the link to the body
+            document.body.appendChild(link);
+
+            // Trigger the download
+            link.click();
+
+            // Clean up
+            document.body.removeChild(link);
         } catch (err) {
             console.error(err);
             toast.error("Can't download your .mp3 file");
