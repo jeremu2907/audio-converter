@@ -2,7 +2,7 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './globals.css';
 
-import Mode from './api/Mode';
+import Mode from './pages/Mode';
 
 export default function Home() {
     return (

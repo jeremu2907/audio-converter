@@ -1,7 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import Mp3Converter from './Mp3Converter';
+import Mp3Converter from '../components/Mp3Converter';
+import BatchMp3 from '../components/BatchMp3';
 
 export default function Mode() {
     const [mode, setMode] = useState(0);
@@ -25,6 +26,7 @@ export default function Mode() {
                 </button>
             </div>
             {(mode === 0) && <Mp3Converter />}
+            {(mode === 1) && <BatchMp3 />}
         </>
     );
 }
