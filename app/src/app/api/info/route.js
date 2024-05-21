@@ -5,7 +5,12 @@ export async function GET(request) {
     const url = params.get('url').replace('"', '');
 
     if (!ytdl.validateURL(url)) {
-        return new Response('Invalid URL', { status: 400 });
+        return new Response(
+            '', {
+                status: 400,
+                statusText: 'Invalid URL',
+            }
+        );
     }
 
     const videoInfo = await ytdl.getBasicInfo(url);

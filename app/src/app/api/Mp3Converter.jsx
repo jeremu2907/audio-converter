@@ -24,8 +24,12 @@ export default function Mp3Converter() {
             const response = await axios.get(`/api/info?url=${yturl}`);
             setVideoData(response.data);
         } catch (err) {
-            console.error(err);
-            toast.error('Can\'t find your video');
+            if (err.response.status === 400) {
+                toast.error(err.response.statusText);
+            }
+            else {
+                toast.error('Something happened in the server');
+            }
         }
     };
 
@@ -40,6 +44,8 @@ export default function Mp3Converter() {
             const response = await axios.get(`/api/download?url=${yturl}`, {
                 responseType: 'blob',
             });
+
+            toast.success('Success!');
 
             // Create a blob URL for the downloaded file
             const blobUrl = URL.createObjectURL(response.data);
@@ -62,8 +68,12 @@ export default function Mp3Converter() {
             link.click();
             document.body.removeChild(link);
         } catch (err) {
-            console.error(err);
-            toast.error('Can\'t download your .mp3 file');
+            if (err.response.status === 400) {
+                toast.error(err.response.statusText);
+            }
+            else {
+                toast.error('Something happened in the server');
+            }
         }
         setLoading(false);
     };
