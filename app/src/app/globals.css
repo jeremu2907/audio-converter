@@ -8,7 +8,8 @@
     --background-end-rgb: 255, 255, 255;
 
     .Toastify__toast-theme--dark {
-        background-color: #31363F;
+        background-color: #31363fa7;
+        backdrop-filter: blur(10px);
     }
 }
 
