@@ -45,7 +45,7 @@ export default function Mp3Converter() {
                 responseType: 'blob',
             });
 
-            toast.success('Success!')
+            toast.success('Success!');
 
             // Create a blob URL for the downloaded file
             const blobUrl = URL.createObjectURL(response.data);

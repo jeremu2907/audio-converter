@@ -6,9 +6,9 @@ export async function GET(request) {
 
     if (!ytdl.validateURL(url)) {
         return new Response(
-            "", {
+            '', {
                 status: 400,
-                statusText: 'Invalid URL'
+                statusText: 'Invalid URL',
             }
         );
     }

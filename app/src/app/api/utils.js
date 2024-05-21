@@ -7,6 +7,6 @@ export function encodeRFC5987ValueChars(str) {
 
 // Returns true if video is at most 60 minutes
 export function validVideoLength(videoInfo) {
-    const duration = videoInfo.player_response.streamingData.formats[0].approxDurationMs
+    const duration = videoInfo.player_response.streamingData.formats[0].approxDurationMs;
     return (duration <= (60000 * 62));
 }
