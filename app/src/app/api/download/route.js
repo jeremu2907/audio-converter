@@ -4,31 +4,42 @@ const fs = require('fs');
 const path = require('path');
 const axios = require('axios');
 
-let cacheSize = 0;
-const CACHE_CAPACITY = 100;
+import { encodeRFC5987ValueChars, validVideoLength } from '../utils';
 
-function encodeRFC5987ValueChars(str) {
-    return encodeURIComponent(str)
-        .replace(/['()]/g, c => '%' + c.charCodeAt(0).toString(16))
-        .replace(/\*/g, '%2A')
-        .replace(/%(?:7C|60|5E)/g, c => String.fromCharCode(parseInt(c.slice(1), 16)));
-}
+let cacheSize = 0;
+const CACHE_CAPACITY = 50;
 
 export async function GET(request) {
     exec('rm -rf /tmp/t-*.mp3 /tmp/*.jpg');
     if (cacheSize > CACHE_CAPACITY) {
-        exec('ls -lt /tmp | tail -n +6 | xargs rm -f --');
-        cacheSize = cacheSize - 5;
+        console.log('clearing cache');
+        exec('rm -rf /tmp/*');
+        cacheSize = 0;
     }
 
     const params = new URL(request.url).searchParams;
     const url = params.get('url').replace('"', '');
 
     if (!ytdl.validateURL(url)) {
-        return new Response('Invalid URL', { status: 400 });
+        return new Response(
+            "", {
+                status: 400,
+                statusText: 'Invalid URL'
+            }
+        );
     }
 
     const videoInfo = await ytdl.getBasicInfo(url);
+
+    if (!validVideoLength(videoInfo)) {
+        return new Response(
+            "", {
+                status: 400,
+                statusText: 'This video is too long. Please limit your video to at most 10 minutes.'
+            }
+        );
+    }
+
     const title = videoInfo.videoDetails.title;
     const artist = videoInfo.videoDetails.ownerChannelName.replace('- Topic', '').trim();
     const videoId = videoInfo.videoDetails.videoId;
