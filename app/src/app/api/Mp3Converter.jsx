@@ -25,7 +25,7 @@ export default function Mp3Converter() {
             setVideoData(response.data);
         } catch (err) {
             if (err.response.status === 400) {
-                toast.error(err.response.statusText);
+                toast.error(err.response.data);
             }
             else {
                 toast.error('Something happened in the server');
@@ -69,7 +69,7 @@ export default function Mp3Converter() {
             document.body.removeChild(link);
         } catch (err) {
             if (err.response.status === 400) {
-                toast.error(err.response.statusText);
+                toast.error(await err.response.data.text());
             }
             else {
                 toast.error('Something happened in the server');

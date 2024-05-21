@@ -22,9 +22,8 @@ export async function GET(request) {
 
     if (!ytdl.validateURL(url)) {
         return new Response(
-            '', {
-                status: 400,
-                statusText: 'Invalid URL',
+            'Invalid URL', {
+                status: 400
             }
         );
     }
@@ -33,9 +32,9 @@ export async function GET(request) {
 
     if (!validVideoLength(videoInfo)) {
         return new Response(
-            '', {
-                status: 400,
-                statusText: 'This video is too long. Please limit your video to at most 1 hour.',
+            'Please limit your video to at most 1 hour.',
+            {
+                status: 400
             }
         );
     }
