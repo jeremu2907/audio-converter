@@ -35,7 +35,7 @@ export async function GET(request) {
         return new Response(
             "", {
                 status: 400,
-                statusText: 'This video is too long. Please limit your video to at most 10 minutes.'
+                statusText: 'This video is too long. Please limit your video to at most 1 hour.'
             }
         );
     }
