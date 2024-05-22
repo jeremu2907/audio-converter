@@ -7,14 +7,14 @@ const axios = require('axios');
 import { encodeRFC5987ValueChars, validVideoLength } from '../utils';
 
 let cacheSize = 0;
-const CACHE_CAPACITY = 50;
+const CACHE_CAPACITY = 200;
 
 export async function GET(request) {
     exec('rm -rf /tmp/t-*.mp3 /tmp/*.jpg');
     if (cacheSize > CACHE_CAPACITY) {
-        console.log('clearing cache');
-        exec('rm -rf /tmp/*');
-        cacheSize = 0;
+        console.info('clearing cache');
+        exec('find /tmp -type f -printf \'%A@ %p\\0\' 2>/dev/null | sort -zn | head -z -n 5 | cut -z -d\' \' -f2- | xargs -0 rm -f');
+        cacheSize -= 5;
     }
 
     const params = new URL(request.url).searchParams;
@@ -47,7 +47,7 @@ export async function GET(request) {
     const imagePath = path.resolve(`/tmp/${videoId}.jpg`);
 
     if (!fs.existsSync(finalOutput)) {
-        console.log('not in cache');
+        console.info('not in cache');
         cacheSize++;
 
         const audioStream = ytdl(url, {
@@ -62,7 +62,7 @@ export async function GET(request) {
             const response = await axios.get(thumbnailURL, { responseType: 'arraybuffer' });
             fs.writeFileSync(imagePath, Buffer.from(response.data, 'binary'));
         } catch (err) {
-            console.log(err);
+            console.info(err);
             setThumbnail = false;
         }
 
@@ -107,7 +107,7 @@ export async function GET(request) {
             audioStream.pipe(ffmpegProcess.stdin);
         });
     } else {
-        console.log('found in cache');
+        console.info('found in cache');
         const fileStreamSong = fs.createReadStream(finalOutput);
 
         const headers = new Headers();
