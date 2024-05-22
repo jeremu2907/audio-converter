@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 
@@ -8,17 +8,17 @@ export default function BatchMp3() {
 
     const convertToList = (str) => {
         return str.split('\n');
-    }
+    };
 
     const handleChange = e => {
         seturlList([...new Set(convertToList(e.target.value))]);
-    }
+    };
 
     const getInfo = async (e) => {
         e.stopPropagation();
         e.preventDefault();
 
-        toast.info('Searching for your videos')
+        toast.info('Searching for your videos');
 
         try {
             if (seturlList.length === 0) {
@@ -26,7 +26,7 @@ export default function BatchMp3() {
                 return;
             }
             const response = await axios.post(
-                `/api/info`,
+                '/api/info',
                 {
                     data: urlList,
                 }
@@ -43,13 +43,15 @@ export default function BatchMp3() {
         }
     };
 
-    const download = async (url) => {
+    const download = async (videoData, self = true) => {
         try {
-            const response = await axios.get(`/api/download?url=${url}`, {
+            const response = await axios.get(`/api/download?url=${videoData.url}`, {
                 responseType: 'blob',
             });
 
-            toast.success('Success!');
+            if (self) {
+                toast.success('Success!');
+            }
 
             // Create a blob URL for the downloaded file
             const blobUrl = URL.createObjectURL(response.data);
@@ -72,7 +74,7 @@ export default function BatchMp3() {
             link.click();
             document.body.removeChild(link);
         } catch (err) {
-            if (err.response.status === 400) {
+            if (err.response?.status === 400) {
                 toast.error(await err.response.data.text());
             }
             else {
@@ -82,7 +84,10 @@ export default function BatchMp3() {
     };
 
     const downloadAll = () => {
-
+        for (const video of videoList) {
+            download(video, false);
+        }
+        toast.success('Success!');
     };
 
     return (
@@ -91,13 +96,13 @@ export default function BatchMp3() {
                 <textarea
                     id='message'
                     rows='7'
-                    class='appearance-none bg-transparent w-full text-white-100 py-3 px-2 leading-loose focus:outline-none cursor-text border-teal-200 border-t border-b resize-none'
+                    className='appearance-none bg-transparent w-full text-white-100 py-3 px-2 leading-loose focus:outline-none cursor-text border-teal-200 border-t border-b resize-none'
                     placeholder={'Paste your video URLs here.\nEach URL in a separate line.'}
                     onChange={handleChange}
                 >
                 </textarea>
                 <div className="flex gap-5 mt-5 justify-end w-full">
-                    {(videoList.length > 0) &&<button
+                    {(videoList.length > 0) && <button
                         className='bg-blue-100 text-white-100 px-5 py-2 rounded hover:bg-blue-50 max-h-[40px] transition-all w-fit'
                         onClick={downloadAll}
                         role='button'
@@ -119,12 +124,13 @@ export default function BatchMp3() {
                     {videoList.map((videoData, idx) => {
                         return (
                             <div
-                                className='w-full flex justify-between items-start border-t-2 border-gray-100 pt-10' 
+                                className='w-full flex justify-between items-start border-t-2 border-gray-100 pt-10'
                                 key={`batch-video-item${idx}`}
                             >
                                 <img
                                     src={videoData.thumbnailURL}
                                     className='w-1/2'
+                                    alt='thumbnail'
                                 />
                                 <div className='flex flex-col justify-start align-start gap-5 ml-[40px] w-1/2'>
                                     <div>
@@ -135,17 +141,17 @@ export default function BatchMp3() {
                                     </div>
                                     <button
                                         className='bg-blue-100 text-white-100 px-5 py-0.5 rounded hover:bg-blue-50 max-h-[40px] transition-all w-fit'
-                                        onClick={() => download(videoData.url)}
+                                        onClick={() => download(videoData)}
                                         role='button'
                                     >
                                         download
                                     </button>
                                 </div>
                             </div>
-                        )
+                        );
                     })}
                 </div>
             }
         </>
-    )
+    );
 }

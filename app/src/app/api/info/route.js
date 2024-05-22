@@ -31,7 +31,7 @@ export async function POST(request) {
     const urlList = (await request.json()).data;
     const videoList = new Array();
 
-    for (let url of urlList) {
+    for (const url of urlList) {
         if (!ytdl.validateURL(url)) {
             continue;
         }
@@ -51,10 +51,5 @@ export async function POST(request) {
         videoList.push(data);
     }
 
-    console.log(videoList);
-
-    // return Response.json({
-    //     data: videoList
-    // });
     return new Response(JSON.stringify(videoList));
 }

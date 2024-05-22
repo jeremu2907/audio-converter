@@ -91,7 +91,7 @@ export default function Mp3Converter() {
                         value={yturl}
                     />
                     <button
-                        className='flex-shrink-0 bg-transparent hover:bg-teal-200 border-0 text-m text-Tblue-50 px-5 py-2 rounded transition-all mt-5'
+                        className='flex-shrink-0 bg-transparent hover:bg-teal-200 border-0 text-m text-Tblue-50 px-5 py-2 rounded transition-all'
                         type='button'
                         onClick={getInfo}
                         role='button'
