@@ -12,7 +12,7 @@ export default function Home() {
             </div>
             <main className="flex min-h-screen flex-col items-center justify-center p-20">
                 <div className='flex items-center mt-[50px] mb-[100px] text-gray-500'>
-                    <h1>Convert YouTube url to mp3. Always ad-free, always available, always free.</h1>
+                    <h1>Convert Youtube url to mp3. Always ad-free, always available, always free.</h1>
                 </div>
                 <Mode />
                 <div className='flex items-center mt-[100px] mb-[50px] gap-[30px] text-gray-500'>
