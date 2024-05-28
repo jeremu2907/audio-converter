@@ -58,8 +58,8 @@ export default function Mp3Converter() {
                 incTimes++;
                 if (incTimes < DIVISION) {
                     setLoadStatus(prev => {
-                        if (prev > 100) {
-                            return 100;
+                        if (prev > 100 - (100 / DIVISION)) {
+                            return 100 - (100 / DIVISION);
                         }
                         return (prev + (100 / DIVISION));
                     });
@@ -157,7 +157,7 @@ export default function Mp3Converter() {
                     </div>
                     {loadStatus > 0 &&
                         <div className="w-1/2 min-w-[600px] bg-gray-200 rounded-full h-2.5 dark:bg-gray-700 mt-[20px]">
-                            <div className="bg-blue-100 h-2.5 rounded-full transition-all" style={{width: `${loadStatus}%`}}></div>
+                            <div className="bg-gradient-to-r from-blue-100 to-teal-10 h-2.5 rounded-full transition-all ease-in-out" style={{width: `${loadStatus}%`}}></div>
                         </div>
                     }
                 </div>
