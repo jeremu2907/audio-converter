@@ -7,7 +7,7 @@ export default function Mp3Converter() {
     const [videoData, setVideoData] = useState(null);
     const [loading, setLoading] = useState(false);
     const [loadStatus, setLoadStatus] = useState(0);
-    let loadingDurationMil = useRef(0);
+    const loadingDurationMil = useRef(0);
 
     const handleInputChange = e => {
         setYturl(e.target.value);
@@ -157,7 +157,7 @@ export default function Mp3Converter() {
                     </div>
                     {loadStatus > 0 &&
                         <div className="w-1/2 min-w-[600px] bg-gray-200 rounded-full h-2.5 dark:bg-gray-700 mt-[20px]">
-                            <div className="bg-gradient-to-r from-blue-100 to-teal-10 h-2.5 rounded-full transition-all ease-in-out" style={{width: `${loadStatus}%`}}></div>
+                            <div className="bg-gradient-to-r from-blue-100 to-teal-10 h-2.5 rounded-full transition-all ease-in-out" style={{ width: `${loadStatus}%` }}></div>
                         </div>
                     }
                 </div>
