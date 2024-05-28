@@ -5,6 +5,8 @@ import { toast } from 'react-toastify';
 export default function BatchMp3() {
     const [urlList, seturlList] = useState([]);
     const [videoList, setVideoList] = useState([]);
+    const [loadStatus, setLoadStatus] = useState(0);
+    const AVGDURATIONMS = 600;
 
     const convertToList = (str) => {
         return str.split('\n');
@@ -18,13 +20,28 @@ export default function BatchMp3() {
         e.stopPropagation();
         e.preventDefault();
 
-        toast.info('Searching for your videos');
-
+        let fakeLoad;
         try {
-            if (seturlList.length === 0) {
+            if (urlList.length === 0) {
                 toast.info('You gotta paste at least 1 Youtube URL');
                 return;
             }
+
+            let incTimes = 0;
+            const DIVISION = 3 * urlList.length;
+            console.log(DIVISION);
+            fakeLoad = setInterval(() => {
+                incTimes++;
+                if (incTimes < DIVISION) {
+                    setLoadStatus(prev => {
+                        if (prev > 100) {
+                            return 100;
+                        }
+                        return (prev + (100 / DIVISION));
+                    });
+                }
+            }, (AVGDURATIONMS * urlList.length / DIVISION));
+
             const response = await axios.post(
                 '/api/info',
                 {
@@ -32,6 +49,7 @@ export default function BatchMp3() {
                 }
             );
 
+            setLoadStatus(100);
             setVideoList(response.data);
         } catch (err) {
             if (err.response.status === 400) {
@@ -41,6 +59,11 @@ export default function BatchMp3() {
                 toast.error('Something happened in the server');
             }
         }
+
+        clearInterval(fakeLoad);
+        setTimeout(() => {
+            setLoadStatus(0);
+        }, 1000);
     };
 
     const download = async (videoData, self = true) => {
@@ -118,6 +141,11 @@ export default function BatchMp3() {
                         Search
                     </button>
                 </div>
+                {loadStatus > 0 &&
+                    <div className="w-1/2 min-w-[600px] bg-gray-200 rounded-full h-2.5 dark:bg-gray-700 mt-[20px]">
+                        <div className="bg-blue-100 h-2.5 rounded-full transition-all" style={{width: `${loadStatus}%`}}></div>
+                    </div>
+                }
             </div>
             {(videoList.length > 0) &&
                 <div className="w-1/2 min-w-[600px] gap-10 flex flex-col mt-5">

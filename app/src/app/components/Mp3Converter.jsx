@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 
@@ -6,6 +6,8 @@ export default function Mp3Converter() {
     const [yturl, setYturl] = useState('');
     const [videoData, setVideoData] = useState(null);
     const [loading, setLoading] = useState(false);
+    const [loadStatus, setLoadStatus] = useState(0);
+    let loadingDurationMil = useRef(0);
 
     const handleInputChange = e => {
         setYturl(e.target.value);
@@ -21,7 +23,12 @@ export default function Mp3Converter() {
                 toast.info('You gotta paste valid Youtube URL');
                 return;
             }
+
+            const start = new Date();
             const response = await axios.get(`/api/info?url=${yturl}`);
+            const end = new Date();
+            loadingDurationMil.current = end - start;
+            console.log(loadingDurationMil.current);
             setVideoData(response.data);
         } catch (err) {
             if (err.response.status === 400) {
@@ -34,16 +41,36 @@ export default function Mp3Converter() {
     };
 
     const download = async () => {
+        console.log(loadingDurationMil.current);
         setLoading(true);
+
+        let fakeLoad;
         try {
             if (yturl.trim() === '') {
                 toast.info('You gotta paste valid Youtube URL');
                 setLoading(false);
                 return;
             }
+
+            let incTimes = 0;
+            const DIVISION = 5;
+            fakeLoad = setInterval(() => {
+                incTimes++;
+                if (incTimes < DIVISION) {
+                    setLoadStatus(prev => {
+                        if (prev > 100) {
+                            return 100;
+                        }
+                        return (prev + (100 / DIVISION));
+                    });
+                }
+            }, (loadingDurationMil.current / DIVISION));
+
             const response = await axios.get(`/api/download?url=${yturl}`, {
                 responseType: 'blob',
             });
+
+            setLoadStatus(100);
 
             toast.success('Success!');
 
@@ -75,7 +102,12 @@ export default function Mp3Converter() {
                 toast.error('Something happened in the server');
             }
         }
+
         setLoading(false);
+        clearInterval(fakeLoad);
+        setTimeout(() => {
+            setLoadStatus(0);
+        }, 1000);
     };
 
     return (
@@ -100,6 +132,7 @@ export default function Mp3Converter() {
                     </button>
                 </div>
             </form>
+
             {(videoData && videoData.embedObj) &&
                 <div className='flex flex-col items-center'>
                     <iframe
@@ -122,6 +155,11 @@ export default function Mp3Converter() {
                             <p className='m-0'>{loading ? '... loading' : 'download'}</p>
                         </button>
                     </div>
+                    {loadStatus > 0 &&
+                        <div className="w-1/2 min-w-[600px] bg-gray-200 rounded-full h-2.5 dark:bg-gray-700 mt-[20px]">
+                            <div className="bg-blue-100 h-2.5 rounded-full transition-all" style={{width: `${loadStatus}%`}}></div>
+                        </div>
+                    }
                 </div>
             }
         </>
