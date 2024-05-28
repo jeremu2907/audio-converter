@@ -3,5 +3,3 @@ Disallow:
 
 User-agent: *
 Allow: /
-
-sitemap: https://jeremynguyen.dev/sitemap.txt
