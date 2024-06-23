@@ -29,6 +29,7 @@ export async function GET(request) {
     }
 
     const videoInfo = await ytdl.getBasicInfo(url);
+    console.log(videoInfo.videoDetails);
 
     if (!validVideoLength(videoInfo)) {
         return new Response(
