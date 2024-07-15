@@ -12,6 +12,8 @@ ENV FLUENTFFMPEG_COV=0
 
 RUN apt update && \
     apt upgrade && \
-    apt install -y ffmpeg
+    apt install -y ffmpeg && \
+    apt-get autoremove && \
+    apt-get clean
 
 RUN npm run build
