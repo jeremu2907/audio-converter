@@ -1,4 +1,4 @@
-const ytdl = require('ytdl-core');
+const ytdl = require('@distube/ytdl-core');
 
 export async function GET(request) {
     const params = new URL(request.url).searchParams;

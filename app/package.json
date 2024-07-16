@@ -10,6 +10,7 @@
     "lint-fix": "npm run lint -- --fix"
   },
   "dependencies": {
+    "@distube/ytdl-core": "^4.13.5",
     "autoprefixer": "^10.4.19",
     "axios": "^1.6.8",
     "eslint-plugin-next": "^0.0.0",
@@ -17,8 +18,7 @@
     "next": "14.2.3",
     "react": "^18",
     "react-dom": "^18",
-    "react-toastify": "^10.0.5",
-    "ytdl-core": "^4.11.5"
+    "react-toastify": "^10.0.5"
   },
   "devDependencies": {
     "@types/node": "20.12.12",

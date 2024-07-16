@@ -64,7 +64,7 @@ export default function Mp3Converter() {
                         return (prev + (100 / DIVISION));
                     });
                 }
-            }, ((loadingDurationMil.current + 3000) / DIVISION));
+            }, ((loadingDurationMil.current + 5000) / DIVISION));
 
             const response = await axios.get(`/api/download?url=${yturl}`, {
                 responseType: 'blob',

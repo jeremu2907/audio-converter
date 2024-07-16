@@ -1,4 +1,4 @@
-const ytdl = require('ytdl-core');
+const ytdl = require('@distube/ytdl-core');
 const { exec } = require('child_process');
 const fs = require('fs');
 const path = require('path');
@@ -29,7 +29,6 @@ export async function GET(request) {
     }
 
     const videoInfo = await ytdl.getBasicInfo(url);
-    console.log(videoInfo.videoDetails);
 
     if (!validVideoLength(videoInfo)) {
         return new Response(
