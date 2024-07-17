@@ -22,7 +22,13 @@ COPY app/*.json .
 COPY app/*.mjs .
 
 RUN apt update && \
-    apt install -y wget xz-utils gcc pkg-config make && \
+    apt install -y \
+        wget \
+        xz-utils \
+        gcc \
+        pkg-config \
+        make \
+        yasm && \
     apt clean
 
 RUN cd / && \
