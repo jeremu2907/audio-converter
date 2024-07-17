@@ -19,7 +19,6 @@ WORKDIR /app
 COPY --from=builder /app/.next .next
 COPY app/*.json .
 COPY app/*.mjs .
+COPY buildFfmpegScript.bash .
 
-RUN apt update && \
-    apt upgrade && \
-    apt install -y ffmpeg
+RUN ./buildFfmpegScript.bash
