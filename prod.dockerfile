@@ -52,4 +52,6 @@ RUN cd / && \
         --disable-pixelutils \
         --disable-everything && \
     make && \
-    make install
+    make install && \
+    cd / && \
+    rm -rf ffmpeg-7.0.1
