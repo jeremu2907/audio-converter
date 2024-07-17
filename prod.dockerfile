@@ -1,4 +1,4 @@
-FROM node:22-bookworm-slim
+FROM node:22-bookworm-slim as builder
 
 WORKDIR /app
 
@@ -10,8 +10,16 @@ ENV FFMPEG_PATH=/usr/bin/ffmpeg
 ENV FFPROBE_PATH=/usr/bin/ffprobe
 ENV FLUENTFFMPEG_COV=0
 
+RUN npm run build
+
+FROM node:22-bookworm-slim
+
+WORKDIR /app
+
+COPY --from=builder /app/.next .next
+COPY app/*.json .
+COPY app/*.mjs .
+
 RUN apt update && \
     apt upgrade && \
     apt install -y ffmpeg
-
-RUN npm run build
