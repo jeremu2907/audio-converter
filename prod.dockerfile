@@ -25,7 +25,7 @@ RUN apt update && \
     apt install -y wget xz-utils gcc pkg-config make && \
     apt clean
 
-RUN cd /
+RUN cd / && \
     wget https://ffmpeg.org/releases/ffmpeg-7.0.1.tar.xz && \
     tar xf ffmpeg-7.0.1.tar.xz && \
     rm -rf ffmpeg-7.0.1.tar.xz && \
