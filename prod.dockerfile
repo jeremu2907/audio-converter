@@ -22,5 +22,5 @@ COPY app/*.json .
 COPY app/*.mjs .
 
 RUN apt update && \
-    apt install -y ffmpeg
+    apt install -y ffmpeg && \
     apt clean
