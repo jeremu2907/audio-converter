@@ -1,6 +1,6 @@
 services:
   app:
-    # image: ghcr.io/jeremu2907/audio-converter:main
+    image: REGISTRY_URL_HERE
     build:
       context: .
       dockerfile: dev.dockerfile
