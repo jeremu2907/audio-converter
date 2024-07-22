@@ -1,9 +1,9 @@
 services:
   app:
-    image: REGISTRY_URL_HERE
-    build:
-      context: .
-      dockerfile: dev.dockerfile
+    image: ghcr.io/jeremu2907/audio-converter:main
+    # build:
+    #   context: .
+    #   dockerfile: prod.dockerfile
     ports: 
       - "3000:3000"
     volumes:
