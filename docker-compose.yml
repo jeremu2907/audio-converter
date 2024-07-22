@@ -1,9 +1,11 @@
 services:
   app:
-    image: ghcr.io/jeremu2907/audio-converter:main
-    # build:
-    #   context: .
-    #   dockerfile: prod.dockerfile
+    # Comment the next line to build image locally
+    image: ghcr.io/jeremu2907/audio-converter:latest
+    # Comment the following `build`, `volumes` and its attributes to run the most updated official image
+    build:
+       context: .
+       dockerfile: dev.dockerfile
     ports: 
       - "3000:3000"
     volumes:
