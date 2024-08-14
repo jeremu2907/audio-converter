@@ -1,8 +1,8 @@
 name: Docker
 
 on:
-  schedule:
-    - cron: '23 5 * * *'
+  # schedule:
+  #   - cron: '23 5 * * *'
   push:
     # Pattern matched against refs/tags
     tags:        
