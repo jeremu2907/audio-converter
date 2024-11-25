@@ -1,7 +1,7 @@
 services:
   app:
     # Comment the next line to build image locally
-    image: ghcr.io/jeremu2907/audio-converter:latest
+    # image: ghcr.io/jeremu2907/audio-converter:latest
     # Comment the following `build`, `volumes` and its attributes to run the most updated official image
     build:
        context: .
@@ -19,4 +19,5 @@ services:
       - ./app/postcss.config.mjs:/app/postcss.config.mjs
       - ./app/tailwind.config.js:/app/tailwind.config.js
       - ./app/tmp:/tmp
+      - ./app/.env:/app/.env
     tty: true
