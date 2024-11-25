@@ -13,12 +13,12 @@ function getRandomIPv6() {
     const segment = () => {
         return Math.floor(Math.random() * 0x10000).toString(16);
     };
-    return `${process.env.IPV6_PREFIX}:${segment()}:${segment()}:${segment()}:${segment()}`
+    return `${process.env.IPV6_PREFIX}:${segment()}:${segment()}:${segment()}:${segment()}`;
 }
 
 export async function GET(request) {
     const agentIPv6 = ytdl.createAgent(undefined, {
-        localAddress: getRandomIPv6()
+        localAddress: getRandomIPv6(),
     });
 
     exec('rm -rf /tmp/t-*.mp3 /tmp/*.jpg');
@@ -64,7 +64,7 @@ export async function GET(request) {
         const audioStream = ytdl(url, {
             filter: 'audioonly',
             quality: 'highestaudio',
-            agent: agentIPv6
+            agent: agentIPv6,
         });
 
         const thumbnailURL = `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`;
