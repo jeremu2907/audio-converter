@@ -1,3 +1,5 @@
+const ytdl = require('@distube/ytdl-core');
+
 export function encodeRFC5987ValueChars(str) {
     return encodeURIComponent(str)
         .replace(/['()]/g, c => '%' + c.charCodeAt(0).toString(16))
