@@ -13,14 +13,15 @@ export function validVideoLength(videoInfo) {
     return (duration <= (60000 * 62));
 }
 
-export function getRandomIPv6Agent() {
-    const segment = () => {
-        return Math.floor(Math.random() * 0x10000).toString(16);
-    };
-    const randomIP = `${process.env.IPV6_PREFIX}:${segment()}:${segment()}:${segment()}:${segment()}`;
-    console.info(randomIP);
-    const agentIPv6 = ytdl.createAgent(undefined, {
-        localAddress: randomIP,
-    });
-    return agentIPv6;
-}
+// export function getRandomIPv6Agent() {
+//     const segment = () => {
+//         return Math.floor(Math.random() * 0x10000).toString(16);
+//     };
+
+//     // const randomIP = `${process.env.IPV6_PREFIX}:${segment()}:${segment()}:${segment()}:${segment()}`;
+//     // console.info(randomIP);
+//     const agentIPv6 = ytdl.createAgent(undefined, {
+//         localAddress: randomIP,
+//     });
+//     return agentIPv6;
+// }
