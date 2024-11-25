@@ -15,7 +15,7 @@ export async function GET(request) {
     }
 
     const videoInfo = await ytdl.getBasicInfo(url, {
-        agent: getRandomIPv6Agent()
+        agent: getRandomIPv6Agent(),
     });
     const title = videoInfo.videoDetails.title;
     const artist = videoInfo.videoDetails.ownerChannelName.replace('- Topic', '').trim();
@@ -41,7 +41,7 @@ export async function POST(request) {
         }
 
         const videoInfo = await ytdl.getBasicInfo(url, {
-            agent: getRandomIPv6Agent()
+            agent: getRandomIPv6Agent(),
         });
         const title = videoInfo.videoDetails.title;
         const artist = videoInfo.videoDetails.ownerChannelName.replace('- Topic', '').trim();
