@@ -1,5 +1,7 @@
 const ytdl = require('@distube/ytdl-core');
 
+import { getRandomIPv6Agent } from '../utils';
+
 export async function GET(request) {
     const params = new URL(request.url).searchParams;
     const url = params.get('url').replace('"', '');
@@ -12,7 +14,9 @@ export async function GET(request) {
         );
     }
 
-    const videoInfo = await ytdl.getBasicInfo(url);
+    const videoInfo = await ytdl.getBasicInfo(url, {
+        agent: getRandomIPv6Agent()
+    });
     const title = videoInfo.videoDetails.title;
     const artist = videoInfo.videoDetails.ownerChannelName.replace('- Topic', '').trim();
     const microformat = videoInfo.player_response.microformat.playerMicroformatRenderer;
@@ -36,7 +40,9 @@ export async function POST(request) {
             continue;
         }
 
-        const videoInfo = await ytdl.getBasicInfo(url);
+        const videoInfo = await ytdl.getBasicInfo(url, {
+            agent: getRandomIPv6Agent()
+        });
         const title = videoInfo.videoDetails.title;
         const artist = videoInfo.videoDetails.ownerChannelName.replace('- Topic', '').trim();
         const videoId = videoInfo.videoDetails.videoId;
