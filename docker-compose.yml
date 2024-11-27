@@ -20,4 +20,5 @@ services:
       - ./app/tailwind.config.js:/app/tailwind.config.js
       - ./app/tmp:/tmp
       - ./app/.env:/app/.env
+      - ./app/cookies.json:/app/cookies.json
     tty: true

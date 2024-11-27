@@ -1,5 +1,5 @@
-const ytdl = require('@distube/ytdl-core');
-const { getRandomIPv6 } = require('@distube/ytdl-core/lib/utils');
+const ytdl = require("@distube/ytdl-core");
+const fs = require("fs");
 
 export function encodeRFC5987ValueChars(str) {
     return encodeURIComponent(str)
@@ -14,18 +14,7 @@ export function validVideoLength(videoInfo) {
     return (duration <= (60000 * 62));
 }
 
-export function getRandomIPv6Agent() {
-    // const segment = () => {
-    //     return Math.floor(Math.random() * 0x10000).toString(16);
-    // };
-
-    // const randomIP = `${process.env.IPV6_PREFIX}:${segment()}:${segment()}:${segment()}:${segment()}`;
-    // console.info(randomIP);
-    // const agentIPv6 = ytdl.createAgent(undefined, {
-    //     localAddress: randomIP,
-    // });
-    const agentIPv6 = ytdl.createAgent(undefined, {
-        localAddress: getRandomIPv6(`${process.env.IPV6_PREFIX}::/64`),
-    });
-    return agentIPv6;
+export function getAgent() {
+    const agent = ytdl.createAgent(JSON.parse(fs.readFileSync("cookies.json")))
+    return agent;
 }

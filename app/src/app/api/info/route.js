@@ -1,4 +1,4 @@
-import { getRandomIPv6Agent } from '../utils';
+import { getAgent, getRandomIPv6Agent } from '../utils';
 
 const ytdl = require('@distube/ytdl-core');
 
@@ -15,7 +15,7 @@ export async function GET(request) {
     }
 
     const videoInfo = await ytdl.getBasicInfo(url, {
-        agent: getRandomIPv6Agent(),
+        agent: getAgent()
     });
     const title = videoInfo.videoDetails.title;
     const artist = videoInfo.videoDetails.ownerChannelName.replace('- Topic', '').trim();
@@ -41,7 +41,7 @@ export async function POST(request) {
         }
 
         const videoInfo = await ytdl.getBasicInfo(url, {
-            agent: getRandomIPv6Agent(),
+            agent: getAgent()
         });
         const title = videoInfo.videoDetails.title;
         const artist = videoInfo.videoDetails.ownerChannelName.replace('- Topic', '').trim();
