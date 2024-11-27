@@ -1,4 +1,4 @@
-import { getAgent, getRandomIPv6Agent } from '../utils';
+import { getAgent } from '../utils';
 
 const ytdl = require('@distube/ytdl-core');
 
