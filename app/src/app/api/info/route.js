@@ -1,6 +1,7 @@
 import { getAgent } from '../utils';
 
 const ytdl = require('@distube/ytdl-core');
+const agent = getAgent();
 
 export async function GET(request) {
     const params = new URL(request.url).searchParams;
@@ -15,7 +16,7 @@ export async function GET(request) {
     }
 
     const videoInfo = await ytdl.getBasicInfo(url, {
-        agent: getAgent(),
+        agent: agent,
     });
     const title = videoInfo.videoDetails.title;
     const artist = videoInfo.videoDetails.ownerChannelName.replace('- Topic', '').trim();
@@ -41,7 +42,7 @@ export async function POST(request) {
         }
 
         const videoInfo = await ytdl.getBasicInfo(url, {
-            agent: getAgent(),
+            agent: agent,
         });
         const title = videoInfo.videoDetails.title;
         const artist = videoInfo.videoDetails.ownerChannelName.replace('- Topic', '').trim();
