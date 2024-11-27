@@ -1,5 +1,5 @@
 const ytdl = require('@distube/ytdl-core');
-const { getRandomIPv6 } = require("@distube/ytdl-core/lib/utils");
+const { getRandomIPv6 } = require('@distube/ytdl-core/lib/utils');
 
 export function encodeRFC5987ValueChars(str) {
     return encodeURIComponent(str)
@@ -25,7 +25,7 @@ export function getRandomIPv6Agent() {
     //     localAddress: randomIP,
     // });
     const agentIPv6 = ytdl.createAgent(undefined, {
-        localAddress: getRandomIPv6(`${process.env.IPV6_PREFIX}::/64`)
-    })
+        localAddress: getRandomIPv6(`${process.env.IPV6_PREFIX}::/64`),
+    });
     return agentIPv6;
 }

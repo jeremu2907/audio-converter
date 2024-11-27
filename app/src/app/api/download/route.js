@@ -29,7 +29,7 @@ export async function GET(request) {
     }
 
     const videoInfo = await ytdl.getBasicInfo(url, {
-        agent: getRandomIPv6Agent()
+        agent: getRandomIPv6Agent(),
     });
 
     if (!validVideoLength(videoInfo)) {
@@ -55,7 +55,7 @@ export async function GET(request) {
         const audioStream = ytdl(url, {
             filter: 'audioonly',
             quality: 'highestaudio',
-            agent: getRandomIPv6Agent()
+            agent: getRandomIPv6Agent(),
         });
 
         const thumbnailURL = `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`;
