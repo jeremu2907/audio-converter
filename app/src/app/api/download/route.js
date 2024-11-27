@@ -8,7 +8,7 @@ import { encodeRFC5987ValueChars, validVideoLength, getAgent } from '../utils';
 
 let cacheSize = 0;
 const CACHE_CAPACITY = 200;
-const agent = getAgent()
+const agent = getAgent();
 
 export async function GET(request) {
     exec('rm -rf /tmp/t-*.mp3 /tmp/*.jpg');
@@ -30,7 +30,7 @@ export async function GET(request) {
     }
 
     const videoInfo = await ytdl.getBasicInfo(url, {
-        agent: agent
+        agent: agent,
     });
 
     if (!validVideoLength(videoInfo)) {
@@ -56,7 +56,7 @@ export async function GET(request) {
         const audioStream = ytdl(url, {
             filter: 'audioonly',
             quality: 'highestaudio',
-            agent: agent
+            agent: agent,
         });
 
         const thumbnailURL = `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`;
