@@ -23,4 +23,5 @@ COPY app/*.mjs .
 
 RUN apt update && \
     apt install -y ffmpeg && \
-    apt clean
+    apt clean && \
+    npm install next
