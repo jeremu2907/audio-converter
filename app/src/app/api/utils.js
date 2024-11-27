@@ -1,3 +1,6 @@
+const ytdl = require('@distube/ytdl-core');
+const fs = require('fs');
+
 export function encodeRFC5987ValueChars(str) {
     return encodeURIComponent(str)
         .replace(/['()]/g, c => '%' + c.charCodeAt(0).toString(16))
@@ -9,4 +12,9 @@ export function encodeRFC5987ValueChars(str) {
 export function validVideoLength(videoInfo) {
     const duration = videoInfo.player_response.streamingData.formats[0].approxDurationMs;
     return (duration <= (60000 * 62));
+}
+
+export function getAgent() {
+    const agent = ytdl.createAgent(JSON.parse(fs.readFileSync('cookies.json')));
+    return agent;
 }

@@ -5,6 +5,8 @@ on:
   #   - cron: '23 5 * * *'
   push:
     # Pattern matched against refs/tags
+    # branches:
+    #   - 'dev'
     tags:        
       - '*'
   # workflow_run:

@@ -4,10 +4,11 @@ const fs = require('fs');
 const path = require('path');
 const axios = require('axios');
 
-import { encodeRFC5987ValueChars, validVideoLength } from '../utils';
+import { encodeRFC5987ValueChars, validVideoLength, getAgent } from '../utils';
 
 let cacheSize = 0;
 const CACHE_CAPACITY = 200;
+const agent = getAgent();
 
 export async function GET(request) {
     exec('rm -rf /tmp/t-*.mp3 /tmp/*.jpg');
@@ -28,7 +29,9 @@ export async function GET(request) {
         );
     }
 
-    const videoInfo = await ytdl.getBasicInfo(url);
+    const videoInfo = await ytdl.getBasicInfo(url, {
+        agent: agent,
+    });
 
     if (!validVideoLength(videoInfo)) {
         return new Response(
@@ -53,6 +56,7 @@ export async function GET(request) {
         const audioStream = ytdl(url, {
             filter: 'audioonly',
             quality: 'highestaudio',
+            agent: agent,
         });
 
         const thumbnailURL = `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`;
