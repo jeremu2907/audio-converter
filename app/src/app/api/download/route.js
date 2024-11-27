@@ -52,7 +52,7 @@ export async function GET(request) {
 
         const audioStream = ytdl(url, {
             filter: 'audioonly',
-            quality: 'highestaudio'
+            quality: 'highestaudio',
         });
 
         const thumbnailURL = `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`;

@@ -1,5 +1,5 @@
-const ytdl = require("@distube/ytdl-core");
-const fs = require("fs");
+const ytdl = require('@distube/ytdl-core');
+const fs = require('fs');
 
 export function encodeRFC5987ValueChars(str) {
     return encodeURIComponent(str)
@@ -15,6 +15,6 @@ export function validVideoLength(videoInfo) {
 }
 
 export function getAgent() {
-    const agent = ytdl.createAgent(JSON.parse(fs.readFileSync("cookies.json")))
+    const agent = ytdl.createAgent(JSON.parse(fs.readFileSync('cookies.json')));
     return agent;
 }
