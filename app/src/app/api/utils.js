@@ -17,6 +17,17 @@ export function validVideoLength(videoInfo) {
 
 export function getAgent() {
     const cookiesFilePath = path.resolve(process.cwd(), 'cookies.json');
-    const agent = ytdl.createAgent(JSON.parse(fs.readFileSync(cookiesFilePath, 'utf-8')));
-    return agent;
+
+    if (!fs.existsSync(cookiesFilePath)) {
+        console.warn('cookies.json not found. Returning default agent.');
+        return ytdl.createAgent();
+    }
+
+    try {
+        const cookies = JSON.parse(fs.readFileSync(cookiesFilePath, 'utf-8'));
+        return ytdl.createAgent(cookies);
+    } catch (error) {
+        console.error('Error reading cookies.json:', error);
+        return ytdl.createAgent();
+    }
 }
