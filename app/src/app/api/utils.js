@@ -30,4 +30,6 @@ export function getAgent() {
         console.error('Error reading cookies.json:', error);
         return ytdl.createAgent();
     }
+    const agent = ytdl.createAgent(JSON.parse(fs.readFileSync('cookies.json')));
+    return agent;
 }
