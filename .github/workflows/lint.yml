@@ -1,4 +1,4 @@
-name: ESLint
+name: Test build and ESLint
 
 on:
   push:
@@ -6,6 +6,21 @@ on:
       - "*"
 
 jobs:
+  test-build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: cd app && npm install && npm build
+
   lint:
     runs-on: ubuntu-latest
 
